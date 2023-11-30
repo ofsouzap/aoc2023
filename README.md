@@ -1,3 +1,5 @@
 # AoC 2024
 
 Code for Advent of Code 2024.
+
+I'll set this up with different directories for code in different languages (e.g. `aoc2024-hs/` is for Haskell code and I'll use `cabal` for this (since it's something I've used once before, unlike `stack` which I don't know how to use at the moment)).
