@@ -21,6 +21,16 @@ maintainer:         ofsouzap@gmail.com
 -- category:
 -- extra-source-files:
 
+data-files:         inputs/day1.txt
+                    inputs/day1-testa.txt
+                    inputs/day1-testb.txt
+
+library Utils
+    exposed-modules:  Utils
+    build-depends:    base ^>=4.16.4.0
+    hs-source-dirs:   Utils
+    default-language: Haskell2010
+
 executable day1
     main-is:          Main.hs
 
@@ -29,6 +39,7 @@ executable day1
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
-    build-depends:    base ^>=4.16.4.0
+    build-depends:    base ^>=4.16.4.0,
+                      Utils
     hs-source-dirs:   day1
     default-language: Haskell2010
