@@ -4,7 +4,10 @@ module Utils (
     splitByNewLineRev,
     splitByNewLineOrdered,
     readFileLines,
+    removeWhitespace,
 ) where
+
+-- Splitting
 
 -- |Split a string into a list of strings, splitting on characters fulfilling a provided predicate. Output is reversed
 splitByRev :: (Char -> Bool) -> String -> [String]
@@ -24,3 +27,11 @@ readFileLines :: FilePath -> IO [String]
 readFileLines fn = do
     contents <- readFile fn
     return (splitByNewLineOrdered contents)
+
+-- Formatting
+
+whitespace :: [Char]
+whitespace = " \t\r\n"
+
+removeWhitespace :: String -> String
+removeWhitespace = filter (`elem` whitespace)
