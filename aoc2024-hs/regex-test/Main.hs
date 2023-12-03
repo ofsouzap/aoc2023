@@ -1,0 +1,79 @@
+module Main where
+
+import Test.HUnit
+    ( assertEqual,
+      runTestTT,
+      Counts(failures),
+      Test(TestList, TestCase, TestLabel) )
+import System.Exit ( exitFailure, exitSuccess )
+import HsRegex (Pattern(..), isMatch)
+
+assertTrue = assertEqual "should be True" True
+assertFalse = assertEqual "should be False" False
+
+sanityTest :: Test
+sanityTest = TestCase (assertEqual "should be 3" 3 (1 + 2))
+
+pChar0 = Char 'a'
+pString0 = String "abba"
+pSeq0 = Seq [Char 'a', Char 'b']
+pSum0 = Sum [Char 'a', Char 'b']
+pNested0 = Sum [Seq [String "ab", Sum [Char 'a', Char 'b']], Char 'c', Char 'd']
+
+allTests :: Test
+allTests = TestList
+    [
+        -- Char
+        TestLabel "Char0 0" (TestCase (assertTrue  (isMatch pChar0 "a"))),
+        TestLabel "Char0 1" (TestCase (assertFalse (isMatch pChar0 "b"))),
+        TestLabel "Char0 2" (TestCase (assertFalse (isMatch pChar0 " "))),
+
+        -- String
+        TestLabel "String0 0" (TestCase (assertFalse (isMatch pString0 ""))),
+        TestLabel "String0 1" (TestCase (assertFalse (isMatch pString0 "a"))),
+        TestLabel "String0 2" (TestCase (assertFalse (isMatch pString0 "ab"))),
+        TestLabel "String0 3" (TestCase (assertTrue  (isMatch pString0 "abba"))),
+        TestLabel "String0 4" (TestCase (assertFalse (isMatch pString0 "aba"))),
+
+        -- Seq
+        TestLabel "Seq0 0" (TestCase (assertTrue  (isMatch pSeq0 "ab"))),
+        TestLabel "Seq0 1" (TestCase (assertFalse (isMatch pSeq0 "ba"))),
+        TestLabel "Seq0 2" (TestCase (assertFalse (isMatch pSeq0 "aa"))),
+        TestLabel "Seq0 3" (TestCase (assertFalse (isMatch pSeq0 "bb"))),
+        TestLabel "Seq0 4" (TestCase (assertFalse (isMatch pSeq0 "aab"))),
+        TestLabel "Seq0 5" (TestCase (assertFalse (isMatch pSeq0 "aabb"))),
+        TestLabel "Seq0 6" (TestCase (assertFalse (isMatch pSeq0 "abb"))),
+        TestLabel "Seq0 7" (TestCase (assertFalse (isMatch pSeq0 ""))),
+        TestLabel "Seq0 8" (TestCase (assertFalse (isMatch pSeq0 "aba"))),
+
+        -- Sum
+        TestLabel "Sum0 0" (TestCase (assertFalse (isMatch pSum0 "ab"))),
+        TestLabel "Sum0 1" (TestCase (assertTrue  (isMatch pSum0 "a"))),
+        TestLabel "Sum0 2" (TestCase (assertTrue  (isMatch pSum0 "b"))),
+        TestLabel "Sum0 3" (TestCase (assertFalse (isMatch pSum0 "ba"))),
+        TestLabel "Sum0 4" (TestCase (assertFalse (isMatch pSum0 "aa"))),
+        TestLabel "Sum0 5" (TestCase (assertFalse (isMatch pSum0 ""))),
+        TestLabel "Sum0 6" (TestCase (assertFalse (isMatch pSum0 "bb"))),
+
+        -- Nested
+        TestLabel "Nested0 0"  (TestCase (assertFalse (isMatch pNested0 ""))),
+        TestLabel "Nested0 1"  (TestCase (assertFalse (isMatch pNested0 "a"))),
+        TestLabel "Nested0 2"  (TestCase (assertFalse (isMatch pNested0 "b"))),
+        TestLabel "Nested0 3"  (TestCase (assertTrue  (isMatch pNested0 "c"))),
+        TestLabel "Nested0 4"  (TestCase (assertTrue  (isMatch pNested0 "d"))),
+        TestLabel "Nested0 5"  (TestCase (assertFalse (isMatch pNested0 "e"))),
+        TestLabel "Nested0 6"  (TestCase (assertFalse (isMatch pNested0 "ab"))),
+        TestLabel "Nested0 7"  (TestCase (assertFalse (isMatch pNested0 "ac"))),
+        TestLabel "Nested0 8"  (TestCase (assertFalse (isMatch pNested0 "ba"))),
+        TestLabel "Nested0 9"  (TestCase (assertTrue  (isMatch pNested0 "aba"))),
+        TestLabel "Nested0 10" (TestCase (assertFalse (isMatch pNested0 "abba"))),
+        TestLabel "Nested0 11" (TestCase (assertTrue  (isMatch pNested0 "abb"))),
+
+        -- Sanity test
+        TestLabel "Sanity" sanityTest
+    ]
+
+main :: IO ()
+main = do
+    result <- runTestTT allTests
+    if failures result > 0 then exitFailure else exitSuccess

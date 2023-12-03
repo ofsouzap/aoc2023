@@ -33,6 +33,21 @@ library Utils
     hs-source-dirs:   Utils
     default-language: Haskell2010
 
+library HsRegex
+    exposed-modules:  HsRegex
+    build-depends:    base ^>=4.16.4.0
+    hs-source-dirs:   HsRegex
+    default-language: Haskell2010
+
+test-suite RegexTest
+    type:             exitcode-stdio-1.0
+    main-is:          Main.hs
+    build-depends:    base >=4.16.4.0,
+                      HUnit ^>=1.6,
+                      HsRegex
+    hs-source-dirs:   regex-test
+    default-language: Haskell2010
+
 executable day1
     main-is:          Main.hs
     build-depends:    base ^>=4.16.4.0,
