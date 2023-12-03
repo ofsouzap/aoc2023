@@ -1,3 +1,4 @@
+{-# LANGUAGE InstanceSigs #-}
 module HsRegex (
     Pattern (..),
     Groups,
@@ -5,43 +6,56 @@ module HsRegex (
 ) where
 
 import Data.Maybe (isJust)
-import Data.List (isPrefixOf)
+import Data.List (isPrefixOf, intercalate)
 
-data Pattern = Char Char
-    | String String
+data Pattern = Null -- Matches immediately
+    | Char Char
+    | String String -- (just a helper)
     | Seq [Pattern]
     | Sum [Pattern]
-    -- | Star Pattern -- Zero or more times -- TODO
-    -- | Plus Pattern -- One or more times -- TODO
-    -- | Opt Pattern -- Zero or one times -- TODO
+    | Star Pattern -- Zero or more times
+    | Plus Pattern -- One or more times (just a helper)
+    | Opt Pattern -- Zero or one times (just a helper)
 
--- TODO - Show instance for Pattern
+showBracketed :: Show a => a -> String
+showBracketed x = "(" ++ show x ++ ")"
+
+instance Show Pattern where
+    show :: Pattern -> String
+    show Null = "∅"
+    show (Char c) = [c]
+    show (String s) = s
+    show (Seq ps) = concatMap showBracketed ps
+    show (Sum ps) = intercalate "|" (map showBracketed ps)
+    show (Star p) = showBracketed p ++ "*"
+    show (Plus p) = showBracketed p ++ "+"
+    show (Opt p) = showBracketed p ++ "?"
 
 type Groups = [(String, String)]
 
--- |Match as much of the string as can be matched and return a Just of the non-matched string or return Nothing if string cannot be matched.
--- |Also returns the named capturing groups
-matchAux :: Pattern -> String -> Maybe String
+matchAux :: Pattern -> String -> [String]
 matchAux p s = case (p, s) of
+    -- Null
+    (Null, s) -> [s]
     -- Char
-    (Char c, "") -> Nothing
-    (Char c, h:ts) -> if h == c then Just ts else Nothing
-    -- String
+    (Char c, "") -> []
+    (Char c, h:ts) -> [ts | h == c]
+    -- String (just a helper)
     (String pStr, s) -> matchAux (Seq (map Char pStr)) s
     -- Seq
-    (Seq [], s) -> Just s
-    (Seq (ph:pts), s) -> case matchAux ph s of
-        Nothing -> Nothing
-        Just s' -> matchAux (Seq pts) s'
+    (Seq [], s) -> [s]
+    (Seq (ph:pts), s) -> let ms = matchAux ph s in
+        concatMap (matchAux (Seq pts)) ms
     -- Sum
-    (Sum [], _) -> Nothing
-    (Sum (ph:pts), s) -> case matchAux ph s of
-        Nothing -> matchAux (Sum pts) s
-        Just s' -> Just s'
+    (Sum [], _) -> []
+    (Sum (ph:pts), s) -> matchAux ph s ++ matchAux (Sum pts) s
+    -- Star
+    (Star p', s) -> s : concatMap (\ x -> x : matchAux (Star p') x) (matchAux p' s)
+    -- Plus (just a helper)
+    (Plus p', s) -> matchAux (Seq [p', Star p']) s
+    -- Opt (just a helper)
+    (Opt p', s) -> matchAux (Sum [Null, p']) s
 
 -- |Match a regex pattern to a string and return the named capture groups
 isMatch :: Pattern -> String -> Bool
-isMatch p s = case matchAux p s of
-    Nothing -> False
-    Just "" -> True
-    Just (_:_) -> False
+isMatch p s = "" `elem` matchAux p s

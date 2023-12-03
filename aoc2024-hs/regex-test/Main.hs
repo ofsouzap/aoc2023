@@ -19,6 +19,9 @@ pString0 = String "abba"
 pSeq0 = Seq [Char 'a', Char 'b']
 pSum0 = Sum [Char 'a', Char 'b']
 pNested0 = Sum [Seq [String "ab", Sum [Char 'a', Char 'b']], Char 'c', Char 'd']
+pStar0 = Seq [Star (String "ab"), Char 'a']
+pPlus0 = Plus (String "ab")
+pOpt0 = Opt (String "ab")
 
 allTests :: Test
 allTests = TestList
@@ -68,6 +71,28 @@ allTests = TestList
         TestLabel "Nested0 9"  (TestCase (assertTrue  (isMatch pNested0 "aba"))),
         TestLabel "Nested0 10" (TestCase (assertFalse (isMatch pNested0 "abba"))),
         TestLabel "Nested0 11" (TestCase (assertTrue  (isMatch pNested0 "abb"))),
+
+        -- Star
+        TestLabel "Star0 0" (TestCase (assertFalse (isMatch pStar0 ""))),
+        TestLabel "Star0 1" (TestCase (assertTrue  (isMatch pStar0 "a"))),
+        TestLabel "Star0 2" (TestCase (assertFalse (isMatch pStar0 "ab"))),
+        TestLabel "Star0 3" (TestCase (assertTrue  (isMatch pStar0 "aba"))),
+        TestLabel "Star0 4" (TestCase (assertTrue  (isMatch pStar0 "ababa"))),
+        TestLabel "Star0 5" (TestCase (assertFalse (isMatch pStar0 "abbaa"))),
+
+        -- Plus
+        TestLabel "Plus0 0" (TestCase (assertFalse (isMatch pPlus0 ""))),
+        TestLabel "Plus0 1" (TestCase (assertTrue  (isMatch pPlus0 "ab"))),
+        TestLabel "Plus0 2" (TestCase (assertTrue  (isMatch pPlus0 "abab"))),
+        TestLabel "Plus0 3" (TestCase (assertTrue  (isMatch pPlus0 "ababab"))),
+        TestLabel "Plus0 4" (TestCase (assertFalse (isMatch pPlus0 "a"))),
+
+        -- Opt
+        TestLabel "Opt0 0" (TestCase (assertTrue  (isMatch pOpt0 ""))),
+        TestLabel "Opt0 1" (TestCase (assertTrue  (isMatch pOpt0 "ab"))),
+        TestLabel "Opt0 2" (TestCase (assertFalse (isMatch pOpt0 "abab"))),
+        TestLabel "Opt0 3" (TestCase (assertFalse (isMatch pOpt0 "ababab"))),
+        TestLabel "Opt0 4" (TestCase (assertFalse (isMatch pOpt0 "a"))),
 
         -- Sanity test
         TestLabel "Sanity" sanityTest
