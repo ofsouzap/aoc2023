@@ -6,7 +6,11 @@ import Test.HUnit
       Counts(failures),
       Test(TestList, TestCase, TestLabel) )
 import System.Exit ( exitFailure, exitSuccess )
-import HsRegex (Pattern(..), isMatch, removeStartingMatch)
+import HsRegex
+    ( Pattern(..),
+      isMatch,
+      removeStartingMatchAny,
+      removeStartingMatchLongest )
 
 assertTrue = assertEqual "should be True" True
 assertFalse = assertEqual "should be False" False
@@ -107,12 +111,20 @@ allTests = TestList
         TestLabel "WithAlphaNumChars0 8" (TestCase (assertTrue  (isMatch pWithAlphaNumChars0 "123b123a"))),
         TestLabel "WithAlphaNumChars0 9" (TestCase (assertFalse (isMatch pWithAlphaNumChars0 "123b123"))),
 
-        -- Some removeStartingMatch tests
-        TestLabel "removeStartingMatch0 0" (TestCase (assertEqual "" (removeStartingMatch pString0 "9") Nothing)),
-        TestLabel "removeStartingMatch0 1" (TestCase (assertEqual "" (removeStartingMatch pString0 "abb") Nothing)),
-        TestLabel "removeStartingMatch0 2" (TestCase (assertEqual "" (removeStartingMatch pString0 "abba") (Just ""))),
-        TestLabel "removeStartingMatch0 3" (TestCase (assertEqual "" (removeStartingMatch pString0 "abba123") (Just "123"))),
-        TestLabel "removeStartingMatch0 4" (TestCase (assertEqual "" (removeStartingMatch pString0 "abbaabba") (Just "abba"))),
+        -- Some removeStartingMatchAny tests
+        TestLabel "removeStartingMatchAny0 0" (TestCase (assertEqual "" (removeStartingMatchAny pString0 "9") Nothing)),
+        TestLabel "removeStartingMatchAny0 1" (TestCase (assertEqual "" (removeStartingMatchAny pString0 "abb") Nothing)),
+        TestLabel "removeStartingMatchAny0 2" (TestCase (assertEqual "" (removeStartingMatchAny pString0 "abba") (Just ""))),
+        TestLabel "removeStartingMatchAny0 3" (TestCase (assertEqual "" (removeStartingMatchAny pString0 "abba123") (Just "123"))),
+        TestLabel "removeStartingMatchAny0 4" (TestCase (assertEqual "" (removeStartingMatchAny pString0 "abbaabba") (Just "abba"))),
+
+        -- Some removeStartingMatchLongest tests
+        TestLabel "removeStartingMatchLongest 0" (TestCase (assertEqual "" (removeStartingMatchLongest pStar0 "9") Nothing)),
+        TestLabel "removeStartingMatchLongest 1" (TestCase (assertEqual "" (removeStartingMatchLongest pStar0 "a") (Just ""))),
+        TestLabel "removeStartingMatchLongest 2" (TestCase (assertEqual "" (removeStartingMatchLongest pStar0 "ab") (Just "b"))),
+        TestLabel "removeStartingMatchLongest 3" (TestCase (assertEqual "" (removeStartingMatchLongest pStar0 "aba") (Just ""))),
+        TestLabel "removeStartingMatchLongest 4" (TestCase (assertEqual "" (removeStartingMatchLongest pStar0 "abab") (Just "b"))),
+        TestLabel "removeStartingMatchLongest 5" (TestCase (assertEqual "" (removeStartingMatchLongest pStar0 "abab555") (Just "b555"))),
 
         -- Sanity test
         TestLabel "Sanity" sanityTest

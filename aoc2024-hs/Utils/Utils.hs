@@ -34,4 +34,4 @@ whitespace :: [Char]
 whitespace = " \t\r\n"
 
 removeWhitespace :: String -> String
-removeWhitespace = filter (`elem` whitespace)
+removeWhitespace = filter (not . \ x -> x `elem` whitespace)

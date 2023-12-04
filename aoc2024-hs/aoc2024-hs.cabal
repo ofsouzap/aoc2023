@@ -25,7 +25,7 @@ data-files:         inputs/day1.txt
                     inputs/day1-testa.txt
                     inputs/day1-testb.txt
                     inputs/day2.txt
-                    inputs/day2-testa.txt
+                    inputs/day2-test.txt
 
 library Utils
     exposed-modules:  Utils
@@ -58,6 +58,7 @@ executable day1
 executable day2
     main-is:          Main.hs
     build-depends:    base ^>=4.16.4.0,
-                      Utils
+                      Utils,
+                      HsRegex
     hs-source-dirs:   day2
     default-language: Haskell2010

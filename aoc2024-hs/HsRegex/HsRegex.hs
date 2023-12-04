@@ -2,7 +2,9 @@
 module HsRegex (
     Pattern (..),
     isMatch,
-    removeStartingMatch,
+    removeStartingMatchAll,
+    removeStartingMatchAny,
+    removeStartingMatchLongest,
 ) where
 
 import Data.Maybe (isJust, listToMaybe)
@@ -80,10 +82,21 @@ matchAux p s = case (p, s) of
     -- Opt (just a helper)
     (Opt p', s) -> matchAux (Sum [Null, p']) s
 
--- |Find any match for a regex on a string starting at the start of the string and return the remaining string after removing the match
-removeStartingMatch :: Pattern -> String -> Maybe String
-removeStartingMatch p s = listToMaybe (matchAux p s)
+-- |Find all matches for a regex on a string starting at the start of the string and return all the possible remaining strings after removing the matches
+removeStartingMatchAll :: Pattern -> String -> [String]
+removeStartingMatchAll = matchAux
 
--- |Match a regex pattern to a string and return the named capture groups
+-- |Find any match for a regex on a string starting at the start of the string and return the remaining string after removing the match
+removeStartingMatchAny :: Pattern -> String -> Maybe String
+removeStartingMatchAny p s = listToMaybe (matchAux p s)
+
+-- |Find the longest match for a regex on a string starting at the start of the string and return the remaining string after removing the match
+removeStartingMatchLongest :: Pattern -> String -> Maybe String
+removeStartingMatchLongest p s = (Just . snd) =<< foldl f Nothing (removeStartingMatchAll p s) where
+    f Nothing x = Just (length x, x)
+    f (Just (n1, x1)) x2 = let n2 = length x2 in
+        if n2 < n1 then Just (n2, x2) else Just (n1, x1)
+
+-- |Check if a string exactly matches a regex
 isMatch :: Pattern -> String -> Bool
 isMatch p s = "" `elem` matchAux p s
