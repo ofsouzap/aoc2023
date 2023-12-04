@@ -1,9 +1,9 @@
 cabal-version:      2.4
-name:               aoc2024-hs
+name:               aoc2023-hs
 version:            0.1.0.0
 
 -- A short (one-line) description of the package.
-synopsis: Advent of Code 2024 in Haskell
+synopsis: Advent of Code 2023 in Haskell
 
 -- A longer description of the package.
 -- description:
@@ -26,6 +26,8 @@ data-files:         inputs/day1.txt
                     inputs/day1-testb.txt
                     inputs/day2.txt
                     inputs/day2-test.txt
+                    inputs/day3.txt
+                    inputs/day3-test.txt
 
 library Utils
     exposed-modules:  Utils
@@ -61,4 +63,13 @@ executable day2
                       Utils,
                       HsRegex
     hs-source-dirs:   day2
+    default-language: Haskell2010
+
+executable day3
+    main-is:          Main.hs
+    build-depends:    base ^>=4.16.4.0,
+                      array ^>= 0.5.4.0,
+                      containers ^>= 0.6.0.0,
+                      Utils
+    hs-source-dirs:   day3
     default-language: Haskell2010

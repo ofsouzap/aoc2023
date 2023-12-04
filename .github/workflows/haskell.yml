@@ -18,7 +18,7 @@ jobs:
 
     defaults:
         run:
-            working-directory: ./aoc2024-hs
+            working-directory: ./aoc2023-hs
 
     steps:
     - uses: actions/checkout@v3
