@@ -22,6 +22,7 @@ pNested0 = Sum [Seq [String "ab", Sum [Char 'a', Char 'b']], Char 'c', Char 'd']
 pStar0 = Seq [Star (String "ab"), Char 'a']
 pPlus0 = Plus (String "ab")
 pOpt0 = Opt (String "ab")
+pWithAlphaNumChars0 = Seq [String "123", WordChar, Star DigitChar, AlphaChar]
 
 allTests :: Test
 allTests = TestList
@@ -93,6 +94,18 @@ allTests = TestList
         TestLabel "Opt0 2" (TestCase (assertFalse (isMatch pOpt0 "abab"))),
         TestLabel "Opt0 3" (TestCase (assertFalse (isMatch pOpt0 "ababab"))),
         TestLabel "Opt0 4" (TestCase (assertFalse (isMatch pOpt0 "a"))),
+
+        -- With alpha-num chars
+        TestLabel "WithAlphaNumChars0 0" (TestCase (assertFalse (isMatch pWithAlphaNumChars0 "a"))),
+        TestLabel "WithAlphaNumChars0 1" (TestCase (assertFalse (isMatch pWithAlphaNumChars0 "123"))),
+        TestLabel "WithAlphaNumChars0 2" (TestCase (assertFalse (isMatch pWithAlphaNumChars0 "123_"))),
+        TestLabel "WithAlphaNumChars0 3" (TestCase (assertTrue  (isMatch pWithAlphaNumChars0 "123_a"))),
+        TestLabel "WithAlphaNumChars0 4" (TestCase (assertTrue  (isMatch pWithAlphaNumChars0 "123_1a"))),
+        TestLabel "WithAlphaNumChars0 5" (TestCase (assertTrue  (isMatch pWithAlphaNumChars0 "123_12a"))),
+        TestLabel "WithAlphaNumChars0 6" (TestCase (assertTrue  (isMatch pWithAlphaNumChars0 "123_123a"))),
+        TestLabel "WithAlphaNumChars0 7" (TestCase (assertTrue  (isMatch pWithAlphaNumChars0 "123a123a"))),
+        TestLabel "WithAlphaNumChars0 8" (TestCase (assertTrue  (isMatch pWithAlphaNumChars0 "123b123a"))),
+        TestLabel "WithAlphaNumChars0 9" (TestCase (assertFalse (isMatch pWithAlphaNumChars0 "123b123"))),
 
         -- Sanity test
         TestLabel "Sanity" sanityTest
