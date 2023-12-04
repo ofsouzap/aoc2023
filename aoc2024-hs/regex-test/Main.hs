@@ -6,7 +6,7 @@ import Test.HUnit
       Counts(failures),
       Test(TestList, TestCase, TestLabel) )
 import System.Exit ( exitFailure, exitSuccess )
-import HsRegex (Pattern(..), isMatch)
+import HsRegex (Pattern(..), isMatch, removeStartingMatch)
 
 assertTrue = assertEqual "should be True" True
 assertFalse = assertEqual "should be False" False
@@ -106,6 +106,13 @@ allTests = TestList
         TestLabel "WithAlphaNumChars0 7" (TestCase (assertTrue  (isMatch pWithAlphaNumChars0 "123a123a"))),
         TestLabel "WithAlphaNumChars0 8" (TestCase (assertTrue  (isMatch pWithAlphaNumChars0 "123b123a"))),
         TestLabel "WithAlphaNumChars0 9" (TestCase (assertFalse (isMatch pWithAlphaNumChars0 "123b123"))),
+
+        -- Some removeStartingMatch tests
+        TestLabel "removeStartingMatch0 0" (TestCase (assertEqual "" (removeStartingMatch pString0 "9") Nothing)),
+        TestLabel "removeStartingMatch0 1" (TestCase (assertEqual "" (removeStartingMatch pString0 "abb") Nothing)),
+        TestLabel "removeStartingMatch0 2" (TestCase (assertEqual "" (removeStartingMatch pString0 "abba") (Just ""))),
+        TestLabel "removeStartingMatch0 3" (TestCase (assertEqual "" (removeStartingMatch pString0 "abba123") (Just "123"))),
+        TestLabel "removeStartingMatch0 4" (TestCase (assertEqual "" (removeStartingMatch pString0 "abbaabba") (Just "abba"))),
 
         -- Sanity test
         TestLabel "Sanity" sanityTest

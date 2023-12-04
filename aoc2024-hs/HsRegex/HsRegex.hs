@@ -2,9 +2,10 @@
 module HsRegex (
     Pattern (..),
     isMatch,
+    removeStartingMatch,
 ) where
 
-import Data.Maybe (isJust)
+import Data.Maybe (isJust, listToMaybe)
 import Data.List (isPrefixOf, intercalate)
 import Data.Char (isAlphaNum, isNumber, isAlpha)
 
@@ -78,6 +79,10 @@ matchAux p s = case (p, s) of
     (Plus p', s) -> matchAux (Seq [p', Star p']) s
     -- Opt (just a helper)
     (Opt p', s) -> matchAux (Sum [Null, p']) s
+
+-- |Find any match for a regex on a string starting at the start of the string and return the remaining string after removing the match
+removeStartingMatch :: Pattern -> String -> Maybe String
+removeStartingMatch p s = listToMaybe (matchAux p s)
 
 -- |Match a regex pattern to a string and return the named capture groups
 isMatch :: Pattern -> String -> Bool
