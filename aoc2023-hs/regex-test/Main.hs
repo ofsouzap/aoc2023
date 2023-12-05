@@ -10,7 +10,8 @@ import HsRegex
     ( Pattern(..),
       isMatch,
       removeStartingMatchAny,
-      removeStartingMatchLongest )
+      removeStartingMatchLongest,
+      findStartingMatchLongest )
 
 assertTrue = assertEqual "should be True" True
 assertFalse = assertEqual "should be False" False
@@ -125,6 +126,14 @@ allTests = TestList
         TestLabel "removeStartingMatchLongest 3" (TestCase (assertEqual "" (removeStartingMatchLongest pStar0 "aba") (Just ""))),
         TestLabel "removeStartingMatchLongest 4" (TestCase (assertEqual "" (removeStartingMatchLongest pStar0 "abab") (Just "b"))),
         TestLabel "removeStartingMatchLongest 5" (TestCase (assertEqual "" (removeStartingMatchLongest pStar0 "abab555") (Just "b555"))),
+
+        -- Some findStartingMatchLongest tests
+        TestLabel "findStartingMatchLongest 0" (TestCase (assertEqual "" (findStartingMatchLongest pStar0 "9") Nothing)),
+        TestLabel "findStartingMatchLongest 1" (TestCase (assertEqual "" (findStartingMatchLongest pStar0 "a") (Just "a"))),
+        TestLabel "findStartingMatchLongest 2" (TestCase (assertEqual "" (findStartingMatchLongest pStar0 "ab") (Just "a"))),
+        TestLabel "findStartingMatchLongest 3" (TestCase (assertEqual "" (findStartingMatchLongest pStar0 "aba") (Just "aba"))),
+        TestLabel "findStartingMatchLongest 4" (TestCase (assertEqual "" (findStartingMatchLongest pStar0 "abab") (Just "aba"))),
+        TestLabel "findStartingMatchLongest 5" (TestCase (assertEqual "" (findStartingMatchLongest pStar0 "abab555") (Just "aba"))),
 
         -- Sanity test
         TestLabel "Sanity" sanityTest
