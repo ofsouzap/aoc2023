@@ -49,25 +49,6 @@ useOnRange ((mDst,mSrc,mRange):ts) x@(xStart,xRange) = within ++ before ++ after
     after = if afterRange > 0 then useOnRange ts afterSpan else []
     within = let diff = withinStart - mSrc in [(mDst + diff, withinRange) | withinRange > 0]
 
--- useOnRange ((dst,src,mRange):ts) x@(xStart,xRange)
---     -- Input range end before map range start
---     | xStart + xRange - 1 < src = useOnRange ts x
---     -- Input range start after map range end
---     | xStart > src + mRange - 1 = useOnRange ts x
---     -- Input range fully in map range
---     | xStart >= src && xStart + xRange - 1 <= src + mRange - 1 = let diff = xStart - src in [(dst+diff, xRange)]
---     -- Map range fully in input range
---     | xStart < src && xStart + xRange - 1 > src + mRange - 1 = within : before ++ after where (
---         before = useOnRange ts (xStart, src-1)
---         after = useOnRange ts (dst+1, xStart+xRange-1)
---         within = (dst, dst+mRange-1) )
---     -- Input range before and within map range
---     | xStart < src &&
---     -- Input range within and after map range
---     -- TODO
---     -- (For helping me find errors)
---     | otherwise = [(-1, -1)]
-
 -- Reading Inputs
 
 everyOther :: [a] -> [a]
@@ -137,44 +118,6 @@ doPartB :: [(Int, Int)] -> [AocMap] -> Int
 doPartB seedRanges maps = rangesMinimum (sendRangesThroughMappings seedRanges maps)
 
 -- Main
-
-x = "seeds: 79 14 55 13\n\
-\\n\
-\seed-to-soil map:\n\
-\50 98 2\n\
-\52 50 48\n\
-\\n\
-\soil-to-fertilizer map:\n\
-\0 15 37\n\
-\37 52 2\n\
-\39 0 15\n\
-\\n\
-\fertilizer-to-water map:\n\
-\49 53 8\n\
-\0 11 42\n\
-\42 0 7\n\
-\57 7 4\n\
-\\n\
-\water-to-light map:\n\
-\88 18 7\n\
-\18 25 70\n\
-\\n\
-\light-to-temperature map:\n\
-\45 77 23\n\
-\81 45 19\n\
-\68 64 13\n\
-\\n\
-\temperature-to-humidity map:\n\
-\0 69 1\n\
-\1 0 69\n\
-\\n\
-\humidity-to-location map:\n\
-\60 56 37\n\
-\56 93 4"
-
-(seeds, maps) = readInput readSeeds x
-
-(seedRanges, _) = readInput readSeedsAsRanges x
 
 mainFor :: String -> FilePath -> IO ()
 mainFor name fn = do
