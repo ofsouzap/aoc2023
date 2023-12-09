@@ -30,6 +30,8 @@ data-files:         inputs/day1.txt
                     inputs/day3-test.txt
                     inputs/day4.txt
                     inputs/day4-test.txt
+                    inputs/day5.txt
+                    inputs/day5-test.txt
 
 library Utils
     exposed-modules:  Utils
@@ -82,4 +84,12 @@ executable day4
                       Utils,
                       HsRegex
     hs-source-dirs:   day4
+    default-language: Haskell2010
+
+executable day5
+    main-is:          Main.hs
+    build-depends:    base ^>=4.16.4.0,
+                      Utils,
+                      HsRegex
+    hs-source-dirs:   day5
     default-language: Haskell2010
