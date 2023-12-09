@@ -97,7 +97,14 @@ executable day5
 executable day6
     main-is:          Main.hs
     build-depends:    base ^>=4.16.4.0,
-                      Utils,
-                      HsRegex
+                      Utils
     hs-source-dirs:   day6
+    default-language: Haskell2010
+
+executable day7
+    main-is:          Main.hs
+    build-depends:    base ^>=4.16.4.0,
+                      containers ^>= 0.6.0.0,
+                      Utils
+    hs-source-dirs:   day7
     default-language: Haskell2010
