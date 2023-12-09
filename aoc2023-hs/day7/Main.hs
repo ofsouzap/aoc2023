@@ -196,14 +196,14 @@ doPartB = doPartA
 
 -- Main
 
-x = "32T3K 765\n\
-\T55J5 684\n\
-\KK677 28\n\
-\KTJJT 220\n\
-\QQQJA 483"
+-- x = "32T3K 765\n\
+-- \T55J5 684\n\
+-- \KK677 28\n\
+-- \KTJJT 220\n\
+-- \QQQJA 483"
 
-input = readInput readCard x
-inputJs = readInput readCardJs x
+-- input = readInput readCard x
+-- inputJs = readInput readCardJs x
 
 mainFor :: String -> FilePath -> IO ()
 mainFor name fn = do
@@ -211,8 +211,8 @@ mainFor name fn = do
     let input = readInput readCard s
     let partA = doPartA input
     putStrLn ("Part A (" ++ name ++ "): " ++ show partA)
-    let input = readInput readCardJs s
-    let partB = doPartB input
+    let inputJs = readInput readCardJs s
+    let partB = doPartB inputJs
     putStrLn ("Part B (" ++ name ++ "): " ++ show partB)
 
 main :: IO ()
