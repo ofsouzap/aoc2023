@@ -27,3 +27,7 @@ cabal.project.local~
 # Also don't include personalised input data
 
 inputs/*.txt
+
+# Also Python code when I gave up with Haskell for a day
+
+.vscode/

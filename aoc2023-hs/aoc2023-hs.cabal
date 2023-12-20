@@ -32,6 +32,16 @@ data-files:         inputs/day1.txt
                     inputs/day4-test.txt
                     inputs/day5.txt
                     inputs/day5-test.txt
+                    inputs/day6.txt
+                    inputs/day6-test.txt
+                    inputs/day7.txt
+                    inputs/day7-test.txt
+                    inputs/day8.txt
+                    inputs/day8-testa.txt
+                    inputs/day8-testb.txt
+                    inputs/day20.txt
+                    inputs/day20-testa.txt
+                    inputs/day20-testb.txt
 
 library Utils
     exposed-modules:  Utils
@@ -115,4 +125,13 @@ executable day8
                       containers ^>= 0.6.0.0,
                       Utils
     hs-source-dirs:   day8
+    default-language: Haskell2010
+
+executable day20
+    main-is:          Main.hs
+    build-depends:    base ^>=4.16.4.0,
+                      containers ^>= 0.6.0.0,
+                      Utils
+    hs-source-dirs:   day20
+    ghc-options:      -Wall
     default-language: Haskell2010
